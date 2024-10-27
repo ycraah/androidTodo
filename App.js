@@ -9,11 +9,12 @@ import {
 } from 'react-native'
 import { NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React, { useState } from 'react'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
-  // 복잡한 구조인 경우에만 필요하다.
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{ fontSize: 40, fontWeight: 'bold' }}>메인 화면</Text>
@@ -74,13 +75,13 @@ const TodoWriteScreen = ({ navigation }) => {
 }
 
 const DetailScreen = ({ navigation, route }) => {
-  const { todo } = route.params?.todo
+  const todo = route.params?.todo
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{ fontSize: 40, fontWeight: 'bold' }}>상세보기 화면</Text>
       <Text style={{ fontSize: 40, fontWeight: 'bold' }}>
-        작성 내용 : {todo ? '없음' : todo}
+        작성 내용 : {todo}
       </Text>
       <Button title="홈으로 이동" onPress={() => navigation.navigate('Home')} />
       <Button
@@ -92,32 +93,86 @@ const DetailScreen = ({ navigation, route }) => {
 }
 
 const Stack = createNativeStackNavigator()
+const Tab = createBottomTabNavigator()
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      {/* <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#f4511e',
+            backgroundColor: "#f4511e",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
+          headerRight: () => (
+            <Pressable onPress={() => alert("클릭됨!!")}>
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>Menu</Text>
+            </Pressable>
+          ),
         }}
       >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{
-            title: '메인 홈',
+            title: "메인 홈",
           }}
         />
         <Stack.Screen name="TodoWrite" component={TodoWriteScreen} />
         <Stack.Screen name="Details" component={DetailScreen} />
-      </Stack.Navigator>
+      </Stack.Navigator> */}
+      <Tab.Navigator
+        screenOptions={{
+          tabBarLabelStyle: {
+            fontSize: 12,
+            paddingBottom: 10,
+            fontWeight: 'bold',
+          },
+          tabBarStyle: {
+            height: 60,
+          },
+          tabBarInactiveTintColor: '#0163d2',
+          tabBarActiveTintColor: 'black',
+          headerRight: () => (
+            <Pressable onPress={() => alert('클릭됨!!')}>
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Menu</Text>
+            </Pressable>
+          ),
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: '메인 홈',
+            tabBarIcon: ({ focused }) => (
+              <MaterialCommunityIcons
+                name="home-variant"
+                size={30}
+                color="black"
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="TodoWrite"
+          component={TodoWriteScreen}
+          options={{
+            title: '할일 작성',
+            tabBarIcon: ({ focused }) => (
+              <MaterialCommunityIcons
+                name="square-edit-outline"
+                size={30}
+                color="black"
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   )
 }
