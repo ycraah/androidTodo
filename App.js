@@ -50,6 +50,26 @@ const TodoWriterScreen = ({ navigation }) => {
           margin: 10,
         }}
       />
+      <Pressable
+        onPress={() => {
+          navigation.navigate('Details')
+        }}
+      >
+        <Text
+          style={{
+            padding: 10,
+            backgroundColor: '#fff',
+            borderRadius: 10,
+            borderWidth: 1,
+            margin: 10,
+            width: '30%',
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          작성
+        </Text>
+      </Pressable>
     </>
   )
 }
