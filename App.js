@@ -1,58 +1,57 @@
-import * as React from 'react'
-import { View, Text, Button, TextInput, Pressable } from 'react-native'
-import { useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { StatusBar } from 'expo-status-bar'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  Pressable,
+} from 'react-native'
+import { NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import React, { useState } from 'react'
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
+  const navigation = useNavigation()
+  // 복잡한 구조인 경우에만 필요하다.
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>메인화면</Text>
+      <Text style={{ fontSize: 40, fontWeight: 'bold' }}>메인 화면</Text>
       <Button
-        title="세부 화면으로 이동"
+        title="상세 페이지 이동"
         onPress={() => navigation.navigate('Details')}
       />
       <Button
-        title="글쓰기 화면으로 이동"
-        onPress={() => navigation.navigate('TodoWriterScreen')}
+        title="할 일 작성"
+        onPress={() => navigation.navigate('TodoWrite')}
       />
     </View>
   )
 }
 
-const DetailScreen = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>세부화면</Text>
-      <Button
-        title="홈 화면으로 이동"
-        onPress={() => navigation.navigate('Home')}
-      />
-    </View>
-  )
-}
+const TodoWriteScreen = ({ navigation }) => {
+  const [todo, setTodo] = useState('')
 
-const TodoWriterScreen = ({ navigation }) => {
-  const [todos, setTodos] = useState('')
   return (
     <>
       <TextInput
         multiline
-        onChangeText={setTodos}
-        value={todos}
-        placeholder="할 일을 작성해주세요"
+        onChangeText={setTodo}
+        value={todo}
+        placeholder="할 일을 작성해주세요."
         style={{
           flex: 0.3,
           padding: 10,
           backgroundColor: '#fff',
           borderRadius: 10,
-          borderWidth: 1,
+          borderWidth: 2,
           margin: 10,
         }}
       />
       <Pressable
         onPress={() => {
-          navigation.navigate('Details')
+          navigation.navigate('Details', { todo })
+          setTodo('')
         }}
       >
         <Text
@@ -60,11 +59,11 @@ const TodoWriterScreen = ({ navigation }) => {
             padding: 10,
             backgroundColor: '#fff',
             borderRadius: 10,
-            borderWidth: 1,
-            margin: 10,
+            borderWidth: 2,
             width: '30%',
             textAlign: 'center',
             fontWeight: 'bold',
+            margin: 10,
           }}
         >
           작성
@@ -74,18 +73,45 @@ const TodoWriterScreen = ({ navigation }) => {
   )
 }
 
+const DetailScreen = ({ navigation, route }) => {
+  const { todo } = route.params
+
+  console.log(todo)
+
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 40, fontWeight: 'bold' }}>상세보기 화면</Text>
+      <Text style={{ fontSize: 40, fontWeight: 'bold' }}>
+        작성 내용 : {todo}
+      </Text>
+      <Button title="홈으로 이동" onPress={() => navigation.navigate('Home')} />
+      <Button
+        title="상세 페이지로 이동"
+        onPress={() => navigation.push('Details')}
+      />
+    </View>
+  )
+}
+
 const Stack = createNativeStackNavigator()
 
-function App() {
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="TodoWriterScreen" component={TodoWriterScreen} />
+        <Stack.Screen name="TodoWrite" component={TodoWriteScreen} />
         <Stack.Screen name="Details" component={DetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
 
-export default App
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})
