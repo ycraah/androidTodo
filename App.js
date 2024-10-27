@@ -99,7 +99,20 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: '메인 홈',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
         <Stack.Screen name="TodoWrite" component={TodoWriteScreen} />
         <Stack.Screen name="Details" component={DetailScreen} />
       </Stack.Navigator>
